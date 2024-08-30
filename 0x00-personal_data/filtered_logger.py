@@ -4,7 +4,8 @@ from typing import List
 import re
 import logging
 from os import getenv
-from mysql.connector.connection import MySQLConnection
+import mysql.connector
+from mysql.connector import connection
 
 
 PII_FIELDS = ('name', 'email', 'phone', 'ssn', 'password')
@@ -47,18 +48,18 @@ def get_logger() -> logging.Logger:
     return logger
 
 
-def get_db() -> MySQLConnection:
+def get_db() -> connection.MySQLConnection:
     """Return a connector to the database."""
     username = getenv('PERSONAL_DATA_DB_USERNAME', 'root')
     password = getenv('PERSONAL_DATA_DB_PASSWORD', '')
     host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
     database = getenv('PERSONAL_DATA_DB_NAME')
 
-    return MySQLConnection(
-        username,
-        password,
-        host,
-        database
+    return mysql.connector.connect(
+        user = username,
+        password = password,
+        host = host,
+        database = database
     )
 
 
@@ -69,9 +70,10 @@ def main() -> None:
     cursor.execute("SELECT * FROM users;")
     rows = cursor.fetchall()
     logger = get_logger()
+    column_names = [desc[0] for desc in cursor.description]
 
     for row in rows:
-        msg = '; '.join([f'{key}={value}' for key, value in row.items()])
+        msg = '; '.join([f'{column_names[i]}={row[i]}' for i in range(len(row))])
         logger.info(msg)
 
     cursor.close()
