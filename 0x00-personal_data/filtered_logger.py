@@ -55,6 +55,9 @@ def get_db() -> connection.MySQLConnection:
     host = getenv('PERSONAL_DATA_DB_HOST', 'localhost')
     database = getenv('PERSONAL_DATA_DB_NAME')
 
+    if not database:
+        raise ValueError("Database name must be provided.")
+
     return mysql.connector.connect(
         user=username,
         password=password,
