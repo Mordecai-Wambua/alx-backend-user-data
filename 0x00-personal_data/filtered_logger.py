@@ -56,10 +56,10 @@ def get_db() -> connection.MySQLConnection:
     database = getenv('PERSONAL_DATA_DB_NAME')
 
     return mysql.connector.connect(
-        user = username,
-        password = password,
-        host = host,
-        database = database
+        user=username,
+        password=password,
+        host=host,
+        database=database
     )
 
 
@@ -73,7 +73,8 @@ def main() -> None:
     column_names = [desc[0] for desc in cursor.description]
 
     for row in rows:
-        msg = '; '.join([f'{column_names[i]}={row[i]}' for i in range(len(row))])
+        msg = '; '.join([f'{column_names[i]}={row[i]}'
+                         for i in range(len(row))])
         logger.info(msg)
 
     cursor.close()
