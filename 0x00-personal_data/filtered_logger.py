@@ -60,3 +60,23 @@ def get_db() -> MySQLConnection:
         host,
         database
     )
+
+
+def main() -> None:
+    """Display each row in the database."""
+    db = get_db()
+    cursor = db.cursor()
+    cursor.execute("SELECT * FROM users;")
+    rows = cursor.fetchall()
+    logger = get_logger()
+
+    for row in rows:
+        msg = '; '.join([f'{key}={value}' for key, value in row.items()])
+        logger.info(msg)
+
+    cursor.close()
+    db.close()
+
+
+if __name__ == "__main__":
+    main()
