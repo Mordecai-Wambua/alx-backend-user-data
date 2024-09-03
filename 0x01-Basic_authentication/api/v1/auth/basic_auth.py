@@ -29,3 +29,4 @@ class BasicAuth(Auth):
                 except Exception:
                     return None
                 return x.decode('utf-8')
+        return None
