@@ -2,6 +2,8 @@
 """Class to perform Basic Authentication."""
 from .auth import Auth
 import base64
+from models.user import User
+from typing import TypeVar
 
 
 class BasicAuth(Auth):
@@ -19,7 +21,7 @@ class BasicAuth(Auth):
         return None
 
     def decode_base64_authorization_header(self, base64_authorization_header:
-                                           str)-> str:
+                                           str) -> str:
         """Return the decoded value of a Base64 string."""
         if base64_authorization_header:
             if isinstance(base64_authorization_header, str):
@@ -40,3 +42,41 @@ class BasicAuth(Auth):
                     return tuple(
                         decoded_base64_authorization_header.split(':'))
         return (None, None)
+
+    def user_object_from_credentials(self, user_email: str,
+                                     user_pwd: str) -> TypeVar('User'):
+        """Return the User instance based on his email and password."""
+        if not user_email or not isinstance(user_email, str)\
+                or not user_pwd or not isinstance(user_pwd, str):
+            return None
+        try:
+            users = User.search({'email': user_email})
+            if not users:
+                return None
+            user = users[0]
+            if not user.is_valid_password(user_pwd):
+                return None
+            return user
+        except Exception:
+            return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """Overloads Auth and retrieves the User instance for a request."""
+        header = self.authorization_header(request)
+        if not header:
+            return None
+
+        base64_header = self.extract_base64_authorization_header(header)
+        if not base64_header:
+            return None
+
+        credentials = self.decode_base64_authorization_header(base64_header)
+        if not credentials:
+            return None
+
+        email, password = self.extract_user_credentials(credentials)
+        if not email or not password:
+            return None
+
+        user = self.user_object_from_credentials(email, password)
+        return user
