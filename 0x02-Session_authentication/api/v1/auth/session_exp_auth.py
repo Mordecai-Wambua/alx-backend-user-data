@@ -26,7 +26,7 @@ class SessionExpAuth(SessionAuth):
         return None
 
     def user_id_for_session_id(self, session_id=None):
-        """"""
+        """Check validity of a given session."""
         if session_id:
             if self.user_id_by_session_id.get(session_id):
                 session_dict = self.user_id_by_session_id.get(session_id)
