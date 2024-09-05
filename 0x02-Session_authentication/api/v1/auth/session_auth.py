@@ -2,6 +2,7 @@
 """Session Authentication Class."""
 from .auth import Auth
 import uuid
+from models.user import User
 
 
 class SessionAuth(Auth):
@@ -22,3 +23,11 @@ class SessionAuth(Auth):
         if not session_id or not isinstance(session_id, str):
             return None
         return SessionAuth.user_id_by_session_id.get(session_id)
+
+    def current_user(self, request=None):
+        """Return a User instance based on a cookie value."""
+        if request:
+            cookie_val = self.session_cookie(request)
+            user_id = self.user_id_for_session_id(cookie_val)
+            return User.get(user_id)
+        return None
