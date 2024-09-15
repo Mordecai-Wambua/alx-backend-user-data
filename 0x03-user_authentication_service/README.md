@@ -33,8 +33,8 @@ You will need to install bcrypt
 pip3 install bcrypt
 ```
 
-## Tasks
-### 0. User model
+# Tasks
+## 0. User model
 In this task you will create a SQLAlchemy model named `User` for a database table named `users` (by using the mapping declaration of SQLAlchemy).
 
 The model will have the following attributes:
@@ -67,7 +67,7 @@ users.reset_token: VARCHAR(250)
 bob@dylan:~$
 ```
   
-### 1. create user
+## 1. create user
 In this task, you will complete the `DB` class provided below to implement the `add_user` method.
 
 ```bash
@@ -129,7 +129,7 @@ bob@dylan:~$ python3 main.py
 bob@dylan:~$
 ```
 
-### 2. Find user
+## 2. Find user
 In this task you will implement the `DB.find_user_by` method. This method takes in arbitrary keyword arguments and returns the first row found in the `users` table as filtered by the method’s input arguments. No validation of input arguments required at this point.
 
 Make sure that SQLAlchemy’s `NoResultFound` and `InvalidRequestError` are raised when no results are found, or when wrong query arguments are passed, respectively.
@@ -177,7 +177,7 @@ Invalid
 bob@dylan:~$ 
 ```
 
-### 3. update user
+## 3. update user
 
 In this task, you will implement the `DB.update_user` method that takes as argument a required `user_id` integer and arbitrary keyword arguments, and returns `None`.
 
@@ -217,7 +217,7 @@ Password updated
 bob@dylan:~$ 
 ```
   
-### 4. Hash password
+## 4. Hash password
 In this task you will define a `_hash_password` method that takes in a `password` string arguments and returns bytes.
 
 The returned bytes is a salted hash of the input password, hashed with `bcrypt.hashpw`.
@@ -236,7 +236,7 @@ b'$2b$12$eUDdeuBtrD41c8dXvzh95ehsWYCCAi4VH1JbESzgbgZT.eMMzi.G2'
 bob@dylan:~$
 ```
   
-### 5. Register user
+## 5. Register user
 In this task, you will implement the `Auth.register_user` in the `Auth` class provided below:
 ```bash
 from db import DB
@@ -287,7 +287,7 @@ could not create a new user: User me@me.com already exists
 bob@dylan:~$
 ```
 
-### 6. Basic Flask app
+## 6. Basic Flask app
 In this task, you will set up a basic Flask app.
 
 Create a Flask app that has a single `GET` route (`"/"`) and use `flask.jsonify` to return a JSON payload of the form:
@@ -300,7 +300,7 @@ if __name__ == "__main__":
     app.run(host="0.0.0.0", port="5000")
 ```
 
-### 7. Register user
+## 7. Register user
 In this task, you will implement the end-point to register a `user`. Define a users function that implements the `POST /users` route.
 
 Import the `Auth` object and instantiate it at the root of the module as such:
@@ -381,7 +381,7 @@ Note: Unnecessary use of -X or --request, POST is already inferred.
 bob@dylan:~$
 ```
 
-### 8. Credentials validation
+## 8. Credentials validation
 In this task, you will implement the `Auth.valid_login` method. It should expect `email` and `password` required arguments and return a boolean.
 
 Try locating the user by email. If it exists, check the password with `bcrypt.checkpw`. If it matches return `True`. In any other case, return `False`.
@@ -412,12 +412,12 @@ False
 bob@dylan:~$
 ```
 
-### 9. Generate UUIDs
+## 9. Generate UUIDs
 In this task you will implement a `_generate_uuid` function in the `auth` module. The function should return a string representation of a new UUID. Use the `uuid` module.
 
 Note that the method is private to the `auth` module and should NOT be used outside of it.
   
-### 10. Get session ID
+## 10. Get session ID
 In this task, you will implement the `Auth.create_session` method. It takes an `email` string argument and returns the session ID as a string.
 
 The method should find the user corresponding to the email, generate a new UUID and store it in the database as the user’s `session_id`, then return the session ID.
@@ -446,7 +446,7 @@ None
 bob@dylan:~$
 ```
 
-### 11. Log in
+## 11. Log in
 In this task, you will implement a `login` function to respond to the `POST /sessions` route.
 
 The request is expected to contain form data with `"email"` and a `"password"` fields.
@@ -513,28 +513,28 @@ Note: Unnecessary use of -X or --request, POST is already inferred.
 bob@dylan:~$
 ```
 
-### 12. Find user by session ID
+## 12. Find user by session ID
 In this task, you will implement the `Auth.get_user_from_session_id` method. It takes a single `session_id` string argument and returns the corresponding `User` or `None`.
 
 If the session ID is `None` or no user is found, return `None`. Otherwise return the corresponding user.
 
 Remember to only use public methods of `self._db`.
   
-### 13. Destroy session
+## 13. Destroy session
 In this task, you will implement `Auth.destroy_session`. The method takes a single `user_id` integer argument and returns `None`.
 
 The method updates the corresponding user’s session ID to `None`.
 
 Remember to only use public methods of `self._db`.
   
-### 14. Log out
+## 14. Log out
 In this task, you will implement a `logout` function to respond to the `DELETE /sessions` route.
 
 The request is expected to contain the session ID as a cookie with key `"session_id"`.
 
 Find the user with the requested session ID. If the user exists destroy the session and redirect the user to `GET /`. If the user does not exist, respond with a 403 HTTP status.
 
-### 15. User profile
+## 15. User profile
 In this task, you will implement a `profile` function to respond to the `GET /profile` route.
 
 The request is expected to contain a `session_id` cookie. Use it to find the user. If the user exist, respond with a 200 HTTP status and the following JSON payload:
@@ -597,13 +597,13 @@ Note: Unnecessary use of -X or --request, GET is already inferred.
 bob@dylan:~$
 ```
 
-### 16. Generate reset password token
+## 16. Generate reset password token
 In this task, you will implement the `Auth.get_reset_password_token` method. It take an `email` string argument and returns a string.
 
 Find the user corresponding to the email. If the user does not exist, raise a `ValueError` exception. If it exists, generate a UUID and update the user’s `reset_token` database field. Return the token.
 
 
-### 17. Get reset password token
+## 17. Get reset password token
 In this task, you will implement a `get_reset_password_token` function to respond to the `POST /reset_password` route.
 
 The request is expected to contain form data with the `"email"` field.
@@ -613,7 +613,7 @@ If the email is not registered, respond with a 403 status code. Otherwise, gener
 {"email": "<user email>", "reset_token": "<reset token>"}
 ```
   
-### 18. Update password
+## 18. Update password
 In this task, you will implement the `Auth.update_password` method. It takes `reset_token` string argument and a `password` string argument and returns `None`.
 
 Use the `reset_token` to find the corresponding user. If it does not exist, raise a `ValueError` exception.
@@ -621,7 +621,7 @@ Use the `reset_token` to find the corresponding user. If it does not exist, rais
 Otherwise, hash the password and update the user’s `hashed_password` field with the new hashed password and the `reset_token` field to `None`.
 
 
-### 19. Update password end-point
+## 19. Update password end-point
 In this task you will implement the `update_password` function in the `app` module to respond to the `PUT /reset_password` route.
 
 The request is expected to contain form data with fields "email", "reset_token" and "new_password".
@@ -633,7 +633,7 @@ If the token is valid, respond with a 200 HTTP code and the following JSON paylo
 {"email": "<user email>", "message": "Password updated"}
 ```
   
-### 20. End-to-end integration test
+## 20. End-to-end integration test
 Start your app. Open a new terminal window.
 
 Create a new module called `main.py`. Create one function for each of the following tasks. Use the `requests` module to query your web server for the corresponding end-point. Use `assert` to validate the response’s expected status code and payload (if any) for each task.
